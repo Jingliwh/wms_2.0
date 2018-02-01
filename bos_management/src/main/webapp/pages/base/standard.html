@@ -27,13 +27,22 @@
 					border : false,
 					rownumbers : true,
 					striped : true,
+					remoteSort:true,
 					pageList: [30,50,100],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../data/standard.json",
+					url : "../../standard_pageQuery",
 					idField : 'id',
 					columns : columns
 				});
+				
+				$('#save').click(function(){
+					if($('#standardForm').form("validate")){
+						$('#standardForm').submit();
+					}else{
+						$.messager.alert("警告","含有非法数据","warning");
+					}
+				})
 			});	
 			
 			//工具栏
@@ -42,14 +51,23 @@
 				text : '增加',
 				iconCls : 'icon-add',
 				handler : function(){
-					alert('增加');
+					$("#standardWindow").panel({title: "新增收派标准"});
+					$("#standardWindow").window("open");
 				}
 			}, {
 				id : 'button-edit',
 				text : '修改',
 				iconCls : 'icon-edit',
 				handler : function(){
-					alert('修改');
+					var rows=$("#grid").datagrid('getSelections');
+					if(rows.length!=1){
+						$.messager.alert("警告","只能修改单行数据","warning");
+					}else{
+						var row=rows[0];
+						$("#standardForm").form('load',row);
+						$("#standardWindow").panel({title: "修改收派标准"});
+						$("#standardWindow").window("open");
+					}
 				}
 			},{
 				id : 'button-delete',
@@ -80,11 +98,14 @@
 				field : 'minWeight',
 				title : '最小重量',
 				width : 120,
+    			sortable:true,  
+    			sortOrder:'desc',  
 				align : 'center'
 			}, {
 				field : 'maxWeight',
 				title : '最大重量',
 				width : 120,
+				sortable:true,
 				align : 'center'
 			}, {
 				field : 'minLength',
@@ -95,11 +116,13 @@
 				field : 'maxLength',
 				title : '最大长度',
 				width : 120,
+				sortable:true,
 				align : 'center'
 			}, {
 				field : 'operator',
 				title : '操作人',
 				width : 120,
+				sortable:true,
 				align : 'center'
 			}, {
 				field : 'operatingTime',
@@ -129,7 +152,7 @@
 
 			<div region="center" style="overflow:auto;padding:5px;" border="false">
 				
-				<form>
+				<form id="standardForm"  action="../../standard_save" method="post">
 					<table class="table-edit" width="80%" align="center">
 						<tr class="title">
 							<td colspan="2">收派标准信息
@@ -148,25 +171,25 @@
 							<td>最小重量</td>
 							<td>
 								<input type="text" name="minWeight" 
-										class="easyui-numberbox" required="true" />
+										class="easyui-numberbox" required="true"  data-options="min:0"/>
 							</td>
 						</tr>
 						<tr>
 							<td>最大重量</td>
 							<td>
-								<input type="text" name="maxWeight" class="easyui-numberbox" required="true" />
+								<input type="text" name="maxWeight" class="easyui-numberbox" required="true" data-options="min:0" />
 							</td>
 						</tr>
 						<tr>
 							<td>最小长度</td>
 							<td>
-								<input type="text" name="minLength" class="easyui-numberbox" required="true" />
+								<input type="text" name="minLength" class="easyui-numberbox" required="true" data-options="min:0"/>
 							</td>
 						</tr>
 						<tr>
 							<td>最大长度</td>
 							<td>
-								<input type="text" name="maxLength" class="easyui-numberbox" required="true" />
+								<input type="text" name="maxLength" class="easyui-numberbox" required="true" data-options="min:0"/>
 							</td>
 						</tr>
 					</table>

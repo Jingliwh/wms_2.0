@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="../../js/easyui/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="../../js/easyui/ext/jquery.portal.js"></script>
 		<script type="text/javascript" src="../../js/easyui/ext/jquery.cookie.js"></script>
+		<script type="text/javascript" src="../../ocupload/jquery.ocupload-1.1.2.js"></script>
 		<script src="../../js/easyui/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			function doAdd(){
@@ -26,18 +27,39 @@
 			function doDelete(){
 				alert("删除...");
 			}
+			function doImport(){
+						$("#button-import").upload({
+					name:'files',
+					action:'../../area_upload.action',
+					onSelect:function(){
+						this.autoSubmit=false;
+						var filename=this.filename();
+						var regex=/^.*\.(xls|xlsx)$/;
+						if(regex.test(filename)){
+							//匹配
+							this.submit();
+						}else{
+							alert("呵呵，不支持的格式");
+						}
+					},
+					onComplete:function(response){
+						alert("呵呵");
+					}
+				});
+			}
+			
 			
 			//工具栏
-			var toolbar = [ {
-				id : 'button-edit',	
-				text : '修改',
-				iconCls : 'icon-edit',
-				handler : doView
-			}, {
+			var toolbar = [{
 				id : 'button-add',
 				text : '增加',
 				iconCls : 'icon-add',
 				handler : doAdd
+			}, {
+				id : 'button-edit',	
+				text : '修改',
+				iconCls : 'icon-edit',
+				handler : doView
 			}, {
 				id : 'button-delete',
 				text : '删除',
@@ -46,7 +68,8 @@
 			}, {
 				id : 'button-import',
 				text : '导入',
-				iconCls : 'icon-redo'
+				iconCls : 'icon-redo',
+				handler : doImport
 			}];
 			// 定义列
 			var columns = [ [ {
