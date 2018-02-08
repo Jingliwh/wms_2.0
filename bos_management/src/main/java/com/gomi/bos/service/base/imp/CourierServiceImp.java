@@ -1,6 +1,12 @@
 package com.gomi.bos.service.base.imp;
 
 import java.util.List;
+import java.util.Set;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,13 +37,11 @@ public class CourierServiceImp implements CourierService {
 
 	@Override
 	public List<Courier> findAll() {
-	
 		return courierReposity.findAll();
 	}
 
 	@Override
 	public Page<Courier> findAll(Specification<Courier> specification, Pageable pageable) {
-	
 		return courierReposity.findAll(specification, pageable);
 	}
 
@@ -46,6 +50,20 @@ public class CourierServiceImp implements CourierService {
 		for (int i = 0; i < idArray.length; i++) {
 			courierReposity.delBatch(Integer.parseInt(idArray[i]));
 		}
+	}
+
+	@Override
+	public List<Courier> findNoAssociation() {
+		//查找未关联定区的快递员，条件 
+		Specification<Courier> speciation=new Specification<Courier>() {
+
+			@Override
+			public Predicate toPredicate(Root<Courier> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Predicate predicate=cb.isEmpty(root.get("fixedAreas").as(Set.class));
+				return predicate;
+			}
+		};
+		return courierReposity.findAll(speciation);
 	}
 	
 	

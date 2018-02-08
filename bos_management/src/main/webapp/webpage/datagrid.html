@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../js/easyui/themes/default/easyui.css" />
+		<link rel="stylesheet" href="../js/easyui/themes/icon.css" />
+		<link rel="stylesheet" href="../js/ztree/zTreeStyle.css" />
+		<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+		<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../js/easyui/locale/easyui-lang-zh_CN.js"></script>
+		<script src="../js/ztree/jquery.ztree.all-3.5.js"></script>
+		<script type="text/jscript">
+			$(function(){
+				var columns=[[ 
+				{field:'code',title:'编号',width:100}, 
+				{field:'name',title:'名称',width:100}, 
+				{field:'price',title:'价格',width:100,align:'center'} 
+				]];
+				
+				var toolbar = [ {
+					id : 'button-add',
+					text : '增加',
+					iconCls : 'icon-add',
+					handler : function(){
+						alert("add");
+					}
+					},{
+						id : 'button-edit',
+						text : '修改',
+						iconCls : 'icon-edit',
+						handler : function(){
+							alert('修改');
+						}
+				}];
+				
+				
+				$('#grid').datagrid({ 
+				url:'product.json', 
+				pagination : true,
+				toolbar:toolbar,
+				pageList: [10,20,30,50,100],
+				columns:columns
+				});
+				
+				
+			});
+		</script>
+	</head>
+	<body>
+		<table id="grid" style="align-content: center;"></table>
+	</body>
+</html>

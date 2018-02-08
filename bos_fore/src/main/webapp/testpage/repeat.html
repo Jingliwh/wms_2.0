@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<script type="text/javascript" src="../js/angular.min.js" ></script>
+		<title>循环遍历</title>
+	</head>
+	<body>
+		<table ng-app="myapp" ng-controller="myctl" border="2px;" width="100%">
+			<tr>
+				<td>索引</td>
+				<td>编号</td>
+				<td>名字</td>
+				<td>价格</td>
+			</tr>
+			<tr ng-repeat="product in products"><!--循环遍历-->
+				<td>{{$index}}</td>
+				<td>{{product.id}}</td>
+				<td>{{product.name}}</td>
+				<td>{{product.price}}</td>
+			</tr>
+		</table>
+	</body>
+	<script type="text/javascript">
+		var app=angular.module("myapp",[]);
+		app.controller("myctl",["$scope",function($scope){
+			$scope.products=[
+				{
+					id:"101",
+					name:"tomato",
+					price:"12.01"
+				},{
+					id:"102",
+					name:"patato",
+					price:"13.01"
+				}
+			];
+		}]);
+	</script>
+</html>

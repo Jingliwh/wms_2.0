@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="../../js/angular.min.js" ></script>
+		<script type="text/javascript" src="../../js/angular-route.min.js" ></script>
+	</head>
+	<body ng-app="myapp" >
+		
+		<div>
+			<a href="#/JAVAEE">JAVAEE</a>
+			<a href="#/IOS">IOS</a>
+			<a href="#/android">android</a>
+		</div>
+		
+		
+		<div ng-view></div>
+		
+		
+		<div>
+			尾部
+		</div>
+		
+		<script type="text/javascrpt">
+			
+			var myhtml5=angular.module("myapp",[]);
+			myhtml5.config(["$routeProvider",function($routeProvider){
+				$routeProvder.when().when().when()
+			}]);
+			
+		</script>
+		
+		
+	</body>
+</html>

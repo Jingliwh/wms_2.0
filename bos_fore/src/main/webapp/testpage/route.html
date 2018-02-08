@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<script type="text/javascript" src="../js/angular.min.js" ></script>
+		<!--
+        	作者：louzhu-lijing
+        	时间：2018-02-05
+        	描述：angular 路由机制的使用，引入以下两个js
+        -->
+		<script type="text/javascript" src="../js/angular-route.min.js" ></script>
+		<title>路由机制</title>
+	</head>
+	<body ng-app="myapp">
+		<div style="width: 100%;height: 300px;border: 1px;color: red;" >
+			<p align="center">菜单栏</p></br>
+			<a href="#/11">第一页</a>
+			<a href="#/22">第二页</a>
+			<a href="#/33">第三页</a>
+		</div>
+		<div ng-view="routeview">
+			
+			
+		</div>
+		<div>
+			<table border="1px" width="100%">
+				<tr>
+				<td>索引</td>
+				<td>编号</td>
+				<td>名字</td>
+				<td>价格</td>
+				</tr>
+				<tr>
+				<td>索引</td>
+				<td>编号</td>
+				<td>名字</td>
+				<td>价格</td>
+				</tr>
+			</table>
+		</div>
+	</body>
+	<script type="text/javascript">
+		var myapp=angular.module("myapp",["ngRoute"]);
+		myapp.config(["$routeProvider",function($routeProvider){
+			$routeProvider
+			.when('/11',{templateUrl:'11.html'})
+			.when('/22',{templateUrl:'22.html'})
+			.when('/33',{templateUrl:'33.html'})
+			.otherwise({redirectTo:'/11.html'});
+		}]);
+	</script>
+</html>

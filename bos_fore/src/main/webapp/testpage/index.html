@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta content="application/xhtml+xml;charset=UTF-8" http-equiv="Content-Type">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>速运快递</title>
+		<script type="text/javascript" src="../js/angular.min.js"></script>
+		
+
+	</head>
+
+	<body ng-app="app1" ng-controller="ctrl1">
+		<div>
+			<input type="text" ng-model="name" />
+			<input type="button" ng-click="alertXxx()" value="弹出"/>
+            <!-- ng-click="name=''"  也可以实现对属性清空-->
+		</div>
+		<div>
+			showmessage:{{name}};
+		</div>
+	</body>
+	<script type="text/javascript">
+		//初始化模块
+		var app1=angular.module("app1",[]);
+		//控制器获取域对象$scope
+		app1.controller("ctrl1",["$scope",function($scope){
+			$scope.name="xxxx";//模型值
+			$scope.alertXxx=function(){
+				alert("点击事件");
+			}
+		}]);
+	</script>
+</html>

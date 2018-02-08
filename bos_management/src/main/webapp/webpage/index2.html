@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../js/easyui/themes/default/easyui.css" />
+		<link rel="stylesheet" href="../js/easyui/themes/icon.css" />
+		<link rel="stylesheet" href="../js/ztree/zTreeStyle.css" />
+		<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+		<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="../js/easyui/locale/easyui-lang-zh_CN.js"></script>
+		<script src="../js/ztree/jquery.ztree.all-3.5.js"></script>
+		<script type="text/jscript">
+			$(function(){
+				$('#czbkLink').click(
+				function(){
+				$("#tt").tabs('add',{
+					title:'面板',
+					toolPosition:'left',
+					content:'Tab Body', 
+					closable:true, 
+					tools:[{ iconCls:'icon-reload', handler : function(){ alert('refresh'); } }]
+					});
+				});
+				var setting={
+					data:{
+						simpleData:{
+							enable:true
+						}
+					},
+					callback: {
+						onClick: zTreeOnClick
+					}
+				};
+				
+				function zTreeOnClick(event, treeId, treeNode, clickFlag){
+    						var content = '<div style="width:100%;height:100%;overflow:hidden;"><iframe src="'+treeNode.page+ '" scrolling="auto" style="width:100%;height:100%;border:0;" ></iframe></div>';
+							$("#tt").tabs('add',{
+								title:treeNode.name,
+								content: content,
+								closable :true
+								});
+							};
+				
+				var zdata=[
+					{id:1,pId:0,name:"父级菜单1"},
+					{id:2,pId:0,name:"父级菜单2"},
+					{id:11,pId:1,name:"子级菜单1"},
+					{id:12,pId:1,name:"子级菜单2"},
+					{id:13,pId:2,name:"子级菜单3"},
+					{id:14,pId:2,name:"子级菜单4",page:'http://www.baidu.com'},
+				];
+				
+				$.fn.zTree.init($("#menuitem"), setting, zdata);
+				
+			});
+		</script>
+	</head>
+	<body class="easyui-layout">
+		<div data-options="region:'north',title:'商城系统',split:true" style="height:100px;"></div> 
+		<div data-options="region:'west',title:'菜单导航',split:true" style="width:120px;">
+			<div id="aa" class="easyui-accordion" data-options="fit:true"> 
+				<div data-options="title:'基础菜单'" style="height:60px;">
+					<ul id="menuitem" class="ztree"></ul>
+				</div>
+				<div title="Title2" data-options="iconCls:'icon-reload',selected:true" style="padding:10px;"> 
+				<a href="javascript:void(0)" id="czbkLink">面板测试</a></div> 
+				<div title="Title3">content3</div> 
+			</div>
+		</div> 
+		<div data-options="region:'center',title:'消息中心'" style="padding:5px;background:#eee;">
+			<div id="tt" class="easyui-tabs"> 
+				
+			</div> 
+		</div> 
+		<div data-options="region:'east',title:'暂时没用',split:true" style="width:40px;">
+			<!--
+            	作者：offline
+            	时间：2018-01-27
+            	描述：东部区域
+            -->
+            <a href="#" class="easyui-menubutton" data-options="iconCls:'icon-save',menu:'#mm'">系统菜单</a>
+	            <div id="mm" style="width: 100px;">
+	            	<div>菜单项一</div>
+	            	<div>菜单项二</div>
+	            	<div class="menu-sep">菜单项三</div> <!--分割线-->
+	            	<div>菜单项四</div>
+	            </div>
+		</div> 
+		<div data-options="region:'south',title:'意见反馈',split:true" style="height:80px;">
+		</div>
+	</body>
+</html>

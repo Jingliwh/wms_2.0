@@ -20,4 +20,6 @@ public interface CourierService {
 
 	void delBatch(String[] idArray);
 
+	List<Courier> findNoAssociation();
+
 }

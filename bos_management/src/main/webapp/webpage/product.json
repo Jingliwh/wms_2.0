@@ -1,0 +1,9 @@
+{
+	"total":100,
+	"rows":[
+		{"code":101,"name":"土豆","price":12.01},
+		{"code":102,"name":"西红柿","price":9.01},
+		{"code":103,"name":"马铃薯","price":11.01},
+		{"code":104,"name":"大白菜","price":6.01}
+	]
+}
