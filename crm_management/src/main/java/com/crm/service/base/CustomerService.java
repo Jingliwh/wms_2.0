@@ -27,7 +27,6 @@ public interface CustomerService {
 
 	@Path("asssociatecustomerstofixedarea")
 	@PUT
-	
 	public void asssociateCustomersToFixedArea(@QueryParam("customerIdsStr")String customerIdsStr,@QueryParam("fixedAreaId")String fixedAreaId);
 	
 	@Path("register")
@@ -44,5 +43,13 @@ public interface CustomerService {
 	@PUT
 	public void updateType(@PathParam("telephone")String  telephone);
 	
-	
+	@Path("login")
+	@GET
+	@Produces({"application/xml","application/json"})
+	public Customer login(@QueryParam("telephone")String  telephone,@QueryParam("password")String password);
+
+	@Path("findByTelephone/{telephone}")
+	@GET
+	@Consumes({"application/xml","application/json"})
+	public  String findFixedAreaIdByAddress(@QueryParam("address") String address);
 }

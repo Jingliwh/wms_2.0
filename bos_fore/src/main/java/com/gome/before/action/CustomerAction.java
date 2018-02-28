@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeUnit;
 
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import javax.jms.Message;
+import javax.jms.Session;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -17,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 
 import com.gomi.before.util.MailUtils;
@@ -32,6 +38,10 @@ public class CustomerAction extends BaseAction<Customer> {
 	@Autowired
 	@Qualifier("redisTemplate1")
 	private RedisTemplate<String, String> redisTemplate;
+	
+	@Autowired
+	@Qualifier("jmsQueueTemplate")
+	private JmsTemplate  jmsTemplate;
 
 	@Action(value = "customer_SendSms")
 	public String SendSms() throws UnsupportedEncodingException {
@@ -41,17 +51,28 @@ public class CustomerAction extends BaseAction<Customer> {
 		// 将验证码存入session
 		ServletActionContext.getRequest().getSession().setAttribute(model.getTelephone(), randomCode);
 		// 编辑短信
-		//String message = "尊敬的用户您好，本次获取的验证码为：" + randomCode + ",服务电话：4006184000";
-		// 调用接口发送短信
-		// String http = SmsUtils.sendSmsByHTTP(model.getTelephone(), message);
-		//假象测试----
-		String http = "000/xxxx";
-		if (http.startsWith("000")) {
+		 final String message = "尊敬的用户您好，本次获取的验证码为：" + randomCode +
+		 ",服务电话：4006184000";
+				// 调用接口发送短信
+				// String http = SmsUtils.sendSmsByHTTP(model.getTelephone(), message);
+				// 假象测试----
+				//		String http = "000/xxxx";
+				//		if (http.startsWith("000")) {
+				//			return NONE;
+				//		} else {
+				//			throw new RuntimeException();
+				//		}
+			jmsTemplate.send("bos_msg", new MessageCreator() {
+				
+				@Override
+				public Message createMessage(Session session) throws JMSException {
+					MapMessage  mapMessage=session.createMapMessage();
+					mapMessage.setString("telephone", model.getTelephone());
+					mapMessage.setString("msg",message);
+					return mapMessage;
+				}
+			});
 			return NONE;
-		} else {
-			throw new RuntimeException();
-		}
-
 	}
 
 	// 获取表单传递的验证码
@@ -104,26 +125,39 @@ public class CustomerAction extends BaseAction<Customer> {
 		// 获取redis中的激活码
 		String redisActiveCode = redisTemplate.opsForValue().get(model.getTelephone());
 		if (redisActiveCode == null || !redisActiveCode.equals(activeCode)) {
-			 // 超时或者激活码不同导致无效
+			// 超时或者激活码不同导致无效
 			ServletActionContext.getResponse().getWriter().println("激活码失效，请重新登录获取");
 		} else {
-				//激活码有效
+			// 激活码有效
 			String getUrl = "http://localhost:9001/crm_management/services/customerService/findByTelephone/"
 					+ model.getTelephone();
 			Customer customer = WebClient.create(getUrl).accept(MediaType.APPLICATION_JSON).get(Customer.class);
 			if (customer.getType() == null || customer.getType() != 1) {
 				// 客户邮箱未激活--更新type为1，激活邮箱
-					String updateType = "http://localhost:9001/crm_management/services/customerService/updateType/"
-							+ model.getTelephone();
-					WebClient.create(updateType).get();
-					ServletActionContext.getResponse().getWriter().println("邮箱激活成功");
+				String updateType = "http://localhost:9001/crm_management/services/customerService/updateType/"
+						+ model.getTelephone();
+				WebClient.create(updateType).get();
+				ServletActionContext.getResponse().getWriter().println("邮箱激活成功");
 			} else {
-				//已激活
-					ServletActionContext.getResponse().getWriter().println("该邮箱已注册，请勿重复激活");
+				// 已激活
+				ServletActionContext.getResponse().getWriter().println("该邮箱已注册，请勿重复激活");
 			}
-				redisTemplate.delete(model.getTelephone());
+			redisTemplate.delete(model.getTelephone());
 		}
 		return NONE;
 	}
-
+	
+	@Action(value = "customer_login", results = {
+			@Result(name = "success", type = "redirect", location = "index.html#/myhome"),
+			@Result(name = "input", type = "redirect", location = "login.html") })
+	public  String login(){
+		String sql="http://localhost:9001/crm_management/services/customerService/login?"
+				+ "telephone="+model.getTelephone()+"&password="+model.getPassword();
+		Customer  customer=WebClient.create(sql).accept(MediaType.APPLICATION_JSON).get(Customer.class);
+		if(customer==null){
+			return  INPUT;
+		}
+		ServletActionContext.getRequest().getSession().setAttribute("customer", customer);
+		return SUCCESS;
+	}
 }

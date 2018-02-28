@@ -24,7 +24,7 @@
 								<img ng-src="{{item.titleImg}}" alt="活动一">
 
 								<div class="caption">
-									<p><a href="#/promotion_detail">{{item.title}}</a></p>
+									<p><a href="#/promotion_detail/{{item.id}}">{{item.title}}</a></p>
 									<p class="text-right status">
 										<span>进行中</span>
 									</p>
@@ -40,7 +40,7 @@
 			<div>
 				<ul class="pagination pull-right">
 					<li>
-						<a href ng-click="prev()">上一页</a>
+						<a href ng-click="pre()">上一页</a>
 					</li>
 					<li ng-repeat="page in pageList" ng-class="{active: isActivePage(page)}">
 						<a ng-click="selectPage(page)">{{ page }}</a>

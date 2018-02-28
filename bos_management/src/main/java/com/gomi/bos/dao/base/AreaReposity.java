@@ -7,4 +7,6 @@ import com.gomi.bos.domain.base.Area;
 
 public interface AreaReposity extends JpaRepository<Area, String> ,JpaSpecificationExecutor<Area>{
 
+	Area findByProvinceAndCityAndDistrict(String province, String city, String district);
+
 }

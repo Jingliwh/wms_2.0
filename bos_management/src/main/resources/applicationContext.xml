@@ -17,7 +17,9 @@
 
 	<!-- 扫描 @Server @Controller @Repository -->
 	<context:component-scan base-package="com.gomi"/>
-
+	<import resource="applicationContext-WebService.xml"/>
+	<import resource="applicationContext-quartz.xml"/>
+	<import resource="applicationContext-mq.xml"/>
 	<!-- 加载properties文件 -->
 	<context:property-placeholder location="classpath:config.properties" />
 	<!-- 配置c3p0数据库连接池 -->

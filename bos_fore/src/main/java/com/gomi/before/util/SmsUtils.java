@@ -1,4 +1,4 @@
-﻿package com.gomi.before.util;
+package com.gomi.before.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -154,14 +154,5 @@ public class SmsUtils {
 			System.out.print("SmsSoap.InputStream error:" + e.getMessage());
 			return null;
 		}
-	}
-
-	public static void main(String[] args) throws IOException {
-		String randomCode = RandomStringUtils.randomNumeric(4);
-		// System.out.println(sendSmsByHTTP("18610905408", randomCode));
-		// System.out.println(sendSmsByHTTP("18610905408", "尊敬的用户您好，本次获取的验证码为："
-		// + randomCode + ",服务电话：4006184000"));
-		System.out.println(sendSmsByWebService("18610905408", "尊敬的用户您好，本次获取的验证码为："
-				 + randomCode + ",服务电话：4006184000"));
 	}
 }

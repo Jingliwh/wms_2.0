@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>自定义分页工具条实现分页效果</title>
+		<script type="text/javascript" src="../js/jquery.js"></script>
+		<script type="text/javascript" src="../js/angular.min.js" ></script>
+		<script type="text/javascript" src="../js/bootstrap.js" ></script>
+		<link rel="stylesheet" href="../css/bootstrap/bootstrap.css" />
+	</head>
+	<body ng-app="pageApp" ng-controller="pageCtrl">
+		<div>
+			<table class=" table table-bordered">
+				<tr>
+					<th>序号</th>
+					<th>商品编号</th>
+					<th>商品名称</th>
+					<th>商品价格</th>
+					<th>描述</th>
+				</tr>
+				<tr ng-repeat="product in products">
+					<td>{{$index}}</td>
+					<td>{{product.id}}</td>
+					<td>{{product.name}}</td>
+					<td>{{product.price}}</td>
+					<td>{{product.desc}}</td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<ul class="pagination pull-right">
+				<li><a href ng-click="pre()">上一页</a></li>
+				<li ng-repeat="page in pageList" ng-class="{active:isActivePage(page)}">
+					<a href ng-click="selectPage(page)" >{{page}}</a>
+				</li>
+				<li><a href ng-click="next()">下一页</a></li>
+			</ul>
+		</div>
+	</body>
+	<script type="text/javascript">
+		var pageApp=angular.module("pageApp",[]);
+		//用模块控制器加载显示数据---变量数组参数
+		pageApp.controller("pageCtrl",["$http","$scope",function($http,$scope){
+			$scope.currentPage=1;//当前页
+			$scope.pageSize=3;//每页记录数
+			$scope.totalSize=0;//总记录数
+			$scope.totalPage=0;//总页数
+			$scope.pageList=new Array();//分页显示条显示的页码
+			//四个方法
+			$scope.pre=function(){
+				$scope.selectPage($scope.currentPage-1);
+			}
+			$scope.next=function(){
+				$scope.selectPage($scope.currentPage+1);
+			}
+			$scope.selectPage=function(page){
+				if($scope.totalSize!=0&&(page<1||page>$scope.totalPage)){
+					return ;
+				}
+				$http({
+				method:'GET',
+				url:'angularlist_'+page+'.json',
+				param:{
+					page:page,
+					pageSize:$scope.pageSize
+				}
+			}).success(function(data,status,headers,config){
+				//将请求获取的数据赋值到域中
+				$scope.products=data.products;
+				//选中页码，加载数据
+				$scope.totalSize=data.totalSize;
+				$scope.totalPage=Math.ceil($scope.totalSize/$scope.pageSize);
+				$scope.currentPage=page;
+				var begin;
+				var end;
+				begin=$scope.currentPage-5;
+				if(begin<1){
+					begin=1;
+				}
+				//end
+				end=begin+9;
+				if(end>$scope.totalPage){
+					end=$scope.totalPage;
+				}
+				//此时修正开始值
+				begin=end-9;
+				if(begin<1){
+					begin=1;
+				}
+				//将页码加入list
+				for (var i=begin;i<=end;i++) {
+					$scope.pageList.push(i);
+				}
+				
+			}).error(function(data,status,headers,config){
+				//响应出错
+				alert("请求错误");
+			});
+				
+				
+			}
+			$scope.isActivePage=function(page){
+				return page==$scope.currentPage;
+			}
+			//初始化首页数据
+			$scope.selectPage(1);
+			
+			
+			
+		}]);
+	</script>
+</html>

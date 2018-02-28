@@ -62,4 +62,16 @@ public class CustomerServiceImp implements CustomerService {
 		System.out.println("hehe");
 	}
 
+	@Override
+	public Customer login(String telephone, String password) {
+	
+		return customerReposity.findByTelephoneAndPassword(telephone,password);
+	}
+
+	@Override
+	public String findFixedAreaIdByAddress(String address) {
+		
+		return customerReposity.findFixedAreaIdByAddress(address);
+	}
+
 }
